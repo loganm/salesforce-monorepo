@@ -37,6 +37,9 @@ jobs:
 
       - name: Run Code Analyzer (PMD)
         run: sf code-analyzer run --severity-threshold 3
+      
+      - name: Install NPM Dependencies
+        run: npm install
 
       - name: Check Apex Formatting
         run: npx prettier --check "packages/**/*.cls"
