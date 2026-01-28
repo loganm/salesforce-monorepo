@@ -38,7 +38,7 @@ jobs:
         run: |
           sf scanner run \
             --engine pmd \
-            --target "packages/**/*.`cls,packages/**/*.trigger" \
+            --target "packages/**/*.cls,packages/**/*.trigger" \
             --severity-threshold 3
 
       - name: Check Apex Formatting
