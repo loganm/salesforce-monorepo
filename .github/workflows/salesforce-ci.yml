@@ -10,6 +10,7 @@ on:
 env:
   SF_USE_GENERIC_UNIX_KEYCHAIN: true
   SF_CLI_TELEMETRY_OUTPUT: true
+  SF_CONTENT_TYPE: JSON
 
 jobs:
   analyze:
