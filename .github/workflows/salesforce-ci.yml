@@ -11,6 +11,7 @@ env:
   SF_USE_GENERIC_UNIX_KEYCHAIN: true
   SF_CLI_TELEMETRY_OUTPUT: true
   SF_CONTENT_TYPE: JSON
+  SF_CONTAINER_MODE: true
 
 jobs:
   analyze:
@@ -35,11 +36,7 @@ jobs:
         run: sf plugins install code-analyzer
 
       - name: Run Code Analyzer (PMD)
-        run: |
-          sf scanner run \
-            --engine pmd \
-            --target "packages/**/*.cls,packages/**/*.trigger" \
-            --severity-threshold 3
+        run: sf code-analyzer run --severity-threshold 3
 
       - name: Check Apex Formatting
         run: npx prettier --check "packages/**/*.cls
