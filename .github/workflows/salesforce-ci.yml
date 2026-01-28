@@ -39,7 +39,4 @@ jobs:
         run: sf code-analyzer run --severity-threshold 3
 
       - name: Check Apex Formatting
-        run: npx prettier --check "packages/**/*.cls
-
-      - name: Check Apex Formatting
-        run: npx prettier --check "packages/**/*.cls""
+        run: npx prettier --check "packages/**/*.cls"
