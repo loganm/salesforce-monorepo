@@ -1,0 +1,47 @@
+name: Salesforce CI 
+
+on:
+  pull_request:
+    paths:
+      - 'packages/**'
+      - 'force-app/**'
+      - 'config/**'
+
+env:
+  SF_USE_GENERIC_UNIX_KEYCHAIN: true
+  SF_CLI_TELEMETRY_OUTPUT: true
+
+jobs:
+  analyze:
+    name: Static Analysis & Formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@4
+        with:
+          node-version: 20
+
+      - name: Install Salesforce CLI
+        run: npm install --global @salesforce/cli
+
+      - name: Install Code Analyzer
+        run: sf plugins install code-analyzer
+
+      - name: Run Code Analyzer (PMD)
+        run: |
+          sf scanner run \
+            --engine pmd \
+            --target "packages/**/*.`cls,packages/**/*.trigger" \
+            --severity-threshold 3
+
+      - name: Check Apex Formatting
+        run: npx prettier --check "packages/**/*.cls
+
+      - name: Check Apex Formatting
+        run: npx prettier --check "packages/**/*.cls""
