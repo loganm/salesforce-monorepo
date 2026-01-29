@@ -1,5 +1,5 @@
 public with sharing class Logger {
-  public static log(String message) {
+  public static void log(String message) {
     System.debug(message);
   }
 }
