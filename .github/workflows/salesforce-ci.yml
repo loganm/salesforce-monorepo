@@ -84,4 +84,4 @@ jobs:
 
       - name: Delete Scratch Org
         if: always() && steps.create_scratch.outputs.created == 'true'
-        run: sf org delete scratch --noprompt
+        run: sf org delete scratch --no-prompt
