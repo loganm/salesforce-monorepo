@@ -1,16 +1,17 @@
-name: Salesforce CI 
+name: Salesforce CI
 
 on:
   pull_request:
     paths:
-      - 'packages/**'
-      - 'config/**'
+      - "packages/**"
+      - "config/**"
 
 env:
   SF_USE_GENERIC_UNIX_KEYCHAIN: true
   SF_CLI_TELEMETRY_OUTPUT: true
   SF_CONTENT_TYPE: JSON
   SF_CONTAINER_MODE: true
+  DEVHUB_SFDX_URL: ${{ secrets.DEVHUB_SFDX_URL }}
 
 jobs:
   analyze:
@@ -36,9 +37,45 @@ jobs:
 
       - name: Run Code Analyzer (PMD)
         run: sf code-analyzer run --severity-threshold 3
-      
+
       - name: Install NPM Dependencies
         run: npm install
 
       - name: Check Apex Formatting
-        run: npx prettier --check "packages/**/*.cls"
+        run: npm run prettier:verify
+
+      - name: Run ESLint
+        run: npm run lint
+
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Salesforce CLI
+        run: npm install --global @salesforce/cli
+
+      - name: Authenticate to Dev Hub
+        run: echo "${{ env.DEVHUB_SFDX_URL }}" | sf auth sfdx-url --set-default-devhub --sfdx-url-stdin
+
+      - name: Create Scratch Org
+        run: sf org create scratch --definition-file config/project-scratch-def.json --duration-days 1 --set-default
+
+      - name: Deploy Project to Scratch Org
+        run: sf project deploy start
+
+      - name: Run Tests
+        run: sf apex test run --result-format human --code-coverage
+
+      - name: Delete Scratch Org
+        run: sf org delete scratch --noprompt
