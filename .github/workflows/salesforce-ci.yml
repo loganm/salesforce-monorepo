@@ -29,6 +29,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install NPM Dependencies
+        run: npm ci
+
       - name: Install Salesforce CLI
         run: npm install --global @salesforce/cli
 
@@ -37,9 +40,6 @@ jobs:
 
       - name: Run Code Analyzer (PMD)
         run: sf code-analyzer run --severity-threshold 3
-
-      - name: Install NPM Dependencies
-        run: npm install
 
       - name: Check Apex Formatting
         run: npm run prettier:verify
