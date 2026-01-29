@@ -70,7 +70,13 @@ jobs:
         run: echo "${{ env.DEVHUB_SFDX_URL }}" | sf org login sfdx-url --set-default-devhub --sfdx-url-stdin
 
       - name: Create Scratch Org
-        run: sf org create scratch --definition-file config/project-scratch-def.json --duration-days 1 --set-default
+        id: create_scratch
+        run: |
+          sf org create scratch `
+            --definition-file config/project-scratch-def.json `
+            --duration-days 1 `
+            --set-default
+          echo "created=true" >> $GITHUB_OUTPUT
 
       - name: Deploy Project to Scratch Org
         run: sf project deploy start
@@ -79,5 +85,5 @@ jobs:
         run: sf apex test run --result-format human --code-coverage
 
       - name: Delete Scratch Org
-        if: always()
+        if: always() && steps.create_scratch.outputs.created == 'true'
         run: sf org delete scratch --noprompt
