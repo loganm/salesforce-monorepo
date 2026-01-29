@@ -68,18 +68,12 @@ jobs:
 
       - name: Authenticate to Dev Hub
         run: |
-          echo "${{ env.DEVHUB_SFDX_URL }}" | \
-            sf org login sfdx-url \
-              --set-default-dev-hub \
-              --sfdx-url-stdin
+          echo "${{ env.DEVHUB_SFDX_URL }}" | sf org login sfdx-url --set-default-dev-hub --sfdx-url-stdin
 
       - name: Create Scratch Org
         id: create_scratch
         run: |
-          sf org create scratch  \
-            --definition-file config/project-scratch-def.json  \
-            --duration-days 1  \
-            --set-default
+          sf org create scratch --definition-file config/project-scratch-def.json --duration-days 1 --set-default
           echo "created=true" >> $GITHUB_OUTPUT
 
       - name: Deploy Project to Scratch Org
