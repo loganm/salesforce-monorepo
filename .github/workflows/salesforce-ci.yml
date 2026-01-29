@@ -15,7 +15,7 @@ env:
 
 jobs:
   analyze:
-    name: Static Analysis & Formatting
+    name: Static Analysis
     runs-on: ubuntu-latest
 
     steps:
@@ -45,6 +45,7 @@ jobs:
         run: npm run prettier:verify
 
       - name: Run ESLint
+        if: hashFiles('**/lwc/**') != ''
         run: npm run lint
 
   build-test:
@@ -78,4 +79,5 @@ jobs:
         run: sf apex test run --result-format human --code-coverage
 
       - name: Delete Scratch Org
+        if: always()
         run: sf org delete scratch --noprompt
