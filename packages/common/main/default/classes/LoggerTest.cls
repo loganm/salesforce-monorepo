@@ -23,6 +23,9 @@
 private class LoggerTest {
   @isTest
   static void myUnitTest() {
+    Boolean condition = false;
     Logger.log('This is a test log message.');
+    condition = true;
+    System.assert(condition, 'The condition should be true after logging.');
   }
 }
